@@ -1,0 +1,20 @@
+#!/bin/bash
+
+echo "Enter source Mac address (eg. ff:00:ae:e4:21:a5): "
+read x
+echo $x >> run.config
+echo "Enter destination Mac address (eg. ff:02:d4:21:67:31): "
+read x
+echo $x >> run.config
+echo "Enter source ip (eg. 192.168.43.1): "
+read x
+echo $x > run.config
+echo "Enter destination ip (eg. 192.168.43.247): "
+read x
+echo $x >> run.config
+echo "Enter source port (eg. 43210): "
+read x
+echo $x >> run.config
+echo "Enter destination port (eg. 43211): "
+read x
+echo $x >> run.config
