@@ -18,7 +18,7 @@ uint64_t r_time, s_time;
 
 static size_t ll_header_sz, ip_header_sz, tcp_header_sz;
 
-#ifdef DUMP_TO_FILE
+#if DUMP_TO_FILE==1
 	static u_char* outFile;
 #endif
 
@@ -34,7 +34,7 @@ void _readTillFlag(u_char* _userData, const struct pcap_pkthdr* header, const u_
 		puts("not an ipv4 packet.");
 	else {
 		
-		#ifdef DUMP_TO_FILE
+		#if DUMP_TO_FILE==1
 			pcap_dump(outFile, header, data);
 		#endif
 
@@ -73,7 +73,7 @@ int establishConnection(pcap_t* handle) {
 	ip_header_sz = sizeof(struct ipv4_header);
 	tcp_header_sz = sizeof(struct tcp_header);
 	
-	#ifdef DUMP_TO_FILE
+	#if DUMP_TO_FILE==1
 		pcap_dumper_t* _outFile = pcap_dump_open(handle, "sample.capture");
     	if(_outFile == NULL)
         	return -1;
