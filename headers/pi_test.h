@@ -6,9 +6,13 @@
 #define TEST_SAMPLE 0
 #define TEST_FASTRETRANSMIT 1
 #define TEST_LIMITEDTRANSMIT 2
+#define TEST_OUTOFBAND 3
+#define TEST_RTOSAMPLES 4
 
 int test_sample(pcap_t* handle);
 int test_fastretransmit(pcap_t* handle);
 int test_limitedtransmit(pcap_t* handle);
+int test_outofband(pcap_t* handle);
+int test_rtosamples(pcap_t* handle);
 
 #endif

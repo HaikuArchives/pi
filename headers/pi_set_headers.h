@@ -5,7 +5,7 @@
 
 extern uint32_t s_seq;
 extern uint32_t s_ack;
-extern uint32_t s_len;
+extern uint16_t s_wnd;
 
 void set_en10mb(void* _header);
 void set_ipv4_tcp(void* _header, uint16_t total_length);

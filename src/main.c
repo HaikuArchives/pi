@@ -47,6 +47,10 @@ int main(int argc, char *argv[]) {
 								  	break;
 		case TEST_LIMITEDTRANSMIT:	rt = test_limitedtransmit(handle);
 									break;
+		case TEST_OUTOFBAND:		rt = test_outofband(handle);
+									break;
+		case TEST_RTOSAMPLES:		rt = test_rtosamples(handle);
+									break;
 		default:
 			fprintf(stderr, "Invalid test number\n");
 	}

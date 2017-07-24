@@ -7,6 +7,7 @@
 
 // Sequence and Acknowledgment of the latest injected segment
 uint32_t s_seq, s_ack;
+uint16_t s_wnd;
 
 static uint16_t ip_checksum(const void *buf, size_t len)
 {
@@ -94,7 +95,7 @@ void set_tcp(void* _header, uint8_t flags, void* options, uint8_t oplen, void* p
 	header->offset = 0x05 + (oplen>>2);
 	header->reserved = 0x0;
 	header->flags = flags;
-	header->window = htons(65000);
+	header->window = htons(s_wnd);
 	header->checksum = 0x0;
 	header->urgent_pointer = 0x0;
 
