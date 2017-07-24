@@ -186,6 +186,8 @@ int test_outofband(pcap_t* handle) {
 	rt = readTillFlags(handle, ACK);
 	if(rt < 0) return -1;
 
+	s_seq = r_ack;
+	s_ack = r_seq + r_len;
 	rt = closeConnection(handle);
 	return rt;
 }
