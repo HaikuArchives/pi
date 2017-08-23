@@ -64,7 +64,7 @@ int test_fastretransmit(pcap_t* handle) {
 	// send 3 dup acks to trigger fast retransmit
 	for(i=0;i<3;++i) {
 		s_seq = r_ack;
-		s_ack = r_seq ;
+		s_ack = r_seq;
 		rt = sendAck(handle, NULL, 0, NULL, 0, 0);
 		if(rt < 0) return -1;	
 	}
@@ -239,4 +239,58 @@ int test_rtosamples(pcap_t* handle) {
 	
 	rt = closeConnection(handle);
 	return rt;	
+}
+
+int test_newreno(pcap_t* handle) {
+	s_seq = 10000;
+	s_ack = 0;
+	s_wnd = 65000;
+	int rt = establishConnection(handle);
+	if(rt < 0) return -1;
+
+	char* request = "p400p400p400p400p400p400p400p400.";
+	int len = strlen(request);
+	rt = sendAck(handle, NULL, 0, request, len, PSH);
+	if(rt < 0) return -1;
+	rt = readTillFlags(handle, ACK);
+	if(rt < 0) return -1;
+
+	int i;
+	for(i=1;i<=8;++i) {
+		rt = readTillFlags(handle, ACK);
+		if(rt < 0) return -1;
+		if(i <= 6) {  // don't acknowledge packets  7 and 8
+			s_seq = r_ack;
+			s_ack = r_seq + r_len;
+			rt = sendAck(handle, NULL, 0, NULL, 0, 0);
+			if(rt < 0) return -1;
+		}
+	}
+
+	// send 3 dup acks to enter fast retransmit
+	for(i=0;i<3;++i) {
+		rt = sendAck(handle, NULL, 0, NULL, 0, 0);
+		if(rt < 0) return -1;	
+	}
+
+	// fast retransmit should elicit an unacknowledged packet
+	rt = readTillFlags(handle, ACK);
+	if(rt < 0) return -1;
+
+	// send a partial acknowledge
+	s_ack = r_seq + r_len;
+	rt = sendAck(handle, NULL, 0, NULL, 0, 0);
+	if(rt < 0) return -1;
+
+	// partial acknowledge should also elicit an unacknowledged packet
+	rt = readTillFlags(handle, ACK);
+	if(rt < 0) return -1;
+
+	// now acknowledge the retranmitted packet
+	s_seq = r_ack;
+	s_ack = r_seq + r_len;
+	rt = sendAck(handle, NULL, 0, NULL, 0, 0);
+	if(rt < 0) return -1;
+	rt = closeConnection(handle);
+	return rt;
 }

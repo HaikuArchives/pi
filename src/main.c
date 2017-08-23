@@ -51,6 +51,8 @@ int main(int argc, char *argv[]) {
 									break;
 		case TEST_RTOSAMPLES:		rt = test_rtosamples(handle);
 									break;
+		case TEST_NEWRENO:			rt = test_newreno(handle);
+									break;
 		default:
 			fprintf(stderr, "Invalid test number\n");
 	}
