@@ -39,7 +39,7 @@ struct userData {
 #define READ_TILL_ACK 2
 
 /* Returns true if num1 and num2 adhere to the specified relation */
-uint8_t _handleSubtypes(uint32_t num1, uint32_t num2, uint8_t relation) {
+static uint8_t _handleSubtypes(uint32_t num1, uint32_t num2, uint8_t relation) {
 	
 	switch(relation) {
 		case _IS_GREATER		:	return num1 > num2;
@@ -52,7 +52,7 @@ uint8_t _handleSubtypes(uint32_t num1, uint32_t num2, uint8_t relation) {
 	return 0;
 }
 
-void _read(u_char* _userData, const struct pcap_pkthdr* header, const u_char* data) {
+static void _read(u_char* _userData, const struct pcap_pkthdr* header, const u_char* data) {
 
 	const struct ipv4_header* ip_header = (const struct ipv4_header*)((u8*)data + sizeof(struct en10mb_header));
 	if(ip_header->version != 4)
@@ -84,10 +84,10 @@ void _read(u_char* _userData, const struct pcap_pkthdr* header, const u_char* da
 			case READ_TILL_FLAG : 	if(tcp_header->flags & u->flags) 
 										pcap_breakloop(u->handle);
 								  	break;
-			case READ_TILL_SEQ 	:	if(_handleSubtypes(tcp_header->sequence, u->seq, u->relation));
+			case READ_TILL_SEQ 	:	if(_handleSubtypes(tcp_header->sequence, u->seq, u->relation))
 										pcap_breakloop(u->handle);
 									break;
-			case READ_TILL_ACK 	:	if(_handleSubtypes(tcp_header->acknowledge, u->ack, u->relation));
+			case READ_TILL_ACK 	:	if(_handleSubtypes(tcp_header->acknowledge, u->ack, u->relation))
 										pcap_breakloop(u->handle);
 									break;
 		}
@@ -129,7 +129,28 @@ int readTillAck(pcap_t* handle, uint8_t relation, uint32_t value) {
 	else return 0;	
 }
 
-int establishConnection(pcap_t* handle) {
+static uint8_t* _generateOptions(int flags, uint8_t* oplen){
+	static uint8_t options[40];
+
+	if(flags == 0) {
+		*oplen = 0;
+		return NULL;
+	}
+
+	int len = 0;
+	if((flags & NEGOTIATE_SACK) != 0) {
+		options[len] = 0x04;
+		options[len + 1] = 0x02;
+		options[len + 2] = 0x01;
+		options[len + 3] = 0x01;
+		len += 4;
+	}
+
+	*oplen = len;
+	return options;
+}
+
+int establishConnection(pcap_t* handle, int flags) {
 	
 	ll_header_sz = sizeof(struct en10mb_header);
 	ip_header_sz = sizeof(struct ipv4_header);
@@ -144,13 +165,16 @@ int establishConnection(pcap_t* handle) {
     	outFile = (u_char*)(_outFile);
     #endif
 
-	size_t total_length = ll_header_sz + ip_header_sz + tcp_header_sz;
+    uint8_t oplen;
+	uint8_t* options = _generateOptions(flags, &oplen);
+	size_t total_length = ll_header_sz + ip_header_sz + tcp_header_sz + oplen;
 	char packet[total_length];
 	
 	// Send SYN
 	set_en10mb(packet);
 	set_ipv4_tcp(packet + ll_header_sz, total_length - ll_header_sz);
-	set_tcp(packet + ll_header_sz + ip_header_sz, SYN, NULL, 0, NULL, 0);
+	set_tcp(packet + ll_header_sz + ip_header_sz, SYN, options, oplen, NULL, 0);
+
 	int rt= pcap_inject(handle, packet, total_length);
 	if(rt == -1) return -1;
 	else printf("<< SYN [ %u , %u ] data_len: 0\n", s_seq, s_ack);

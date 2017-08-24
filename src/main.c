@@ -53,6 +53,8 @@ int main(int argc, char *argv[]) {
 									break;
 		case TEST_NEWRENO:			rt = test_newreno(handle);
 									break;
+		case TEST_SACK:				rt = test_sack(handle);
+									break;
 		default:
 			fprintf(stderr, "Invalid test number\n");
 	}

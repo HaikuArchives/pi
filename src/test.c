@@ -12,7 +12,7 @@ int test_sample(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 	
 	char* data = "Hi. My name is Ayush.\n";
@@ -34,7 +34,7 @@ int test_fastretransmit(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 
 	char* request = "p[200]p[200]p[200]p[200]p[200]p[200]p[200]p[200].";
@@ -73,7 +73,6 @@ int test_fastretransmit(pcap_t* handle) {
 	if(rt < 0) return -1;
 
 	puts("");
-    puts("////////////////////////////////////////////////////////");
 	if(r_seq == check_seq) {
 		printf("Packet %s was retransmitted\n", r_len == check_len ? "of same length" : "of different length");
 		printf("Time difference: %lld microseconds\n", (long long int)r_time - check_time);
@@ -81,7 +80,6 @@ int test_fastretransmit(pcap_t* handle) {
 
 	else 
 		printf("Rightful retransmission didn't occur\n");
-	puts("///////////////////////////////////////////////////////");
     puts("");
 
 	// now acknowledge the retranmitted packet
@@ -97,7 +95,7 @@ int test_limitedtransmit(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 
 	char* request = "p500p500p500p500p500p500.";
@@ -144,7 +142,7 @@ int test_outofband(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 
 	char* request = "p[200]p[200]p[200]p[200].";
@@ -197,7 +195,7 @@ int test_rtosamples(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 
 	char* request = "p[100]p[100]s500p[100]p[100].";
@@ -245,7 +243,7 @@ int test_newreno(pcap_t* handle) {
 	s_seq = 10000;
 	s_ack = 0;
 	s_wnd = 65000;
-	int rt = establishConnection(handle);
+	int rt = establishConnection(handle, 0);
 	if(rt < 0) return -1;
 
 	char* request = "p400p400p400p400p400p400p400p400.";
@@ -291,6 +289,64 @@ int test_newreno(pcap_t* handle) {
 	s_ack = r_seq + r_len;
 	rt = sendAck(handle, NULL, 0, NULL, 0, 0);
 	if(rt < 0) return -1;
+	rt = closeConnection(handle);
+	return rt;
+}
+
+int test_sack(pcap_t* handle) {
+
+	s_seq = 10000;
+	s_ack = 0;
+	s_wnd = 65000;
+	int rt = establishConnection(handle, NEGOTIATE_SACK);
+	if(rt < 0) return -1;
+
+	int len = 400;
+	char data[len];  // test segments of length "len" will be sent
+	memset(data, '.', len);
+
+	/*
+	// Test 1: Sending segments 2, 3, 4. Leaving out the 1st one.
+	int i;
+	for(i=1;i<=3;++i) {
+		s_seq = r_ack + i*len;   // for i = 1, 2nd segment will be sent
+		rt = sendAck(handle, NULL, 0, data, len, PSH);
+		if(rt < 0) return -1;
+		rt = readTillFlags(handle, ACK);  // all of them should contain SACK information
+		if(rt < 0) return -1;
+	}
+
+	s_seq = r_ack;  // finally send the 1st segment
+	rt = sendAck(handle, NULL, 0, data, len, PSH);
+	if(rt < 0) return -1;
+	rt = readTillFlags(handle, ACK);
+	if(rt < 0) return -1;
+	*/
+
+	// Test 2: Sending 6 segments leaving out every alternate one.
+	int i;
+	for(i=0;i<6;++i) {
+		if((i % 2) == 0) {
+			s_seq = 10001 + i*len;
+			rt = sendAck(handle, NULL, 0, data, len, PSH);
+			if(rt < 0) return -1;
+			rt = readTillFlags(handle, ACK);
+			if(rt < 0) return -1;
+		}
+	}
+
+	// Send the missing segments
+	for(i=0;i<6;++i) {
+		if((i % 2) == 1) {
+			s_seq = 10001 + i*len;
+			rt = sendAck(handle, NULL, 0, data, len, PSH);
+			if(rt < 0) return -1;
+			rt = readTillFlags(handle, ACK);
+			if(rt < 0) return -1;
+		}
+	}
+
+	s_seq = r_ack;
 	rt = closeConnection(handle);
 	return rt;
 }
