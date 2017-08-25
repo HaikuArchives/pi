@@ -1,0 +1,5 @@
+Unique Bytes transferred = 10485760 (10.00 MB)
+Elapsed time = 103.04 seconds (1.72 minutes)
+Throughput = 101760 Bps
+TCP Efficiency = 94.56%
+Buffer Delay = 15.79% [ Baseline RTT 3.80 ms ]

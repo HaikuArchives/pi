@@ -1,0 +1,165 @@
+tt1 to tt16 describes test where the original TCP implementation of Haiku is used. Following them, the tests
+use the one in which my patches are applied. 
+
+There are tests with same conditions for both. For example, one can compare the results of tt8 & tt20 - they 
+are run under same conditions and the former runs the original implementation of Haiku whereas the latter 
+runs the patched one.
+
+A & B describe the systems in use. "Me" means my Ubuntu system. So Me:Haiku:VM would mean Haiku running under
+virtual machine on my system. Note that the file transfer are always from A -> B. "rule" is the command used
+to control/manipulate the tcp traffic. "rule=A:" means that the rule was applied on system A.
+
+..........................................................................................................
+.................................... With no patches applied .............................................
+..........................................................................................................
+
+### There are no test cases with names tt3, tt5, tt6. They were deleted.
+
+tt1: 
+A=Me:Ubuntu
+B=Raspbian
+Transfer=file10M.img
+
+tt2:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+
+tt4:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+
+tt7:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+rule=A:sudo tc qdisc add dev wlan0 root netem loss 10%
+
+tt8:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem loss 0.3% 25%
+
+tt9:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 10ms 25%
+
+tt10:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 20ms distribution normal
+
+tt11:
+A=Raspbian
+B=Me:Haiku:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 900ms 350ms distribution normal
+
+tt12:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:sudo tc qdisc add dev wlan0 root netem loss 1%
+
+tt13:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem loss 0.3% 25%
+
+tt14:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 10ms 25%
+
+tt15:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 20ms distribution normal
+
+tt16:
+A=Me:Haiku:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 900ms 350ms distribution normal
+
+..........................................................................................................
+..................... With all patches except the ideal timer patch applied ..............................
+..........................................................................................................
+
+tt17:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+
+tt18:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+
+tt19:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+rule=A:sudo tc qdisc add dev wlan0 root netem loss 10%
+
+tt20:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem loss 0.3% 25%
+
+tt21:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 10ms 25%
+
+tt22:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 20ms distribution normal
+
+tt23:
+A=Raspbian
+B=Me:Haiku_patched:VM
+Transfer=file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 900ms 350ms distribution normal
+
+tt24:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:sudo tc qdisc add dev wlan0 root netem loss 1%
+
+tt25:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem loss 0.3% 25%
+
+tt26:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 10ms 25%
+
+tt27:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 100ms 20ms distribution normal
+
+tt28:
+A=Me:Haiku_patched:VM
+B=Raspbian
+Transfer=_file10.img
+rule=A:tc qdisc add dev wlan0 root netem delay 900ms 350ms distribution normal

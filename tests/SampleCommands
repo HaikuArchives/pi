@@ -1,0 +1,22 @@
+To capture packets:
+	tcpdump port 1234 -s 100 -w dump.out
+
+To generate statistics from capture:
+	tcptrace -lWr dump.out > report
+
+To generate graphs from capture:
+	tcptrace -G dump.out
+
+To plot the graphs:
+	xplot.org graph.xpl
+
+
+......................................................
+
+To receive file on the server:
+	nc -nvvlp <server_port>  > outputFile
+
+To send file from the client:
+	cat inputFile | nc <server_ip> <server_port>
+
+......................................................

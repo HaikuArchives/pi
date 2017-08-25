@@ -1,0 +1,93 @@
+1 arg remaining, starting with 'tt28.out'
+Ostermann's tcptrace -- version 6.6.7 -- Thu Nov  4, 2004
+
+6327 packets seen, 6327 TCP packets traced
+elapsed wallclock time: 0:00:03.206189, 1973 pkts/sec analyzed
+trace file elapsed time: 0:14:01.002965
+TCP connection info:
+1 TCP connection traced:
+TCP connection 1:
+	host a:        192.168.43.158:40127
+	host b:        raspberrypi:17000
+	complete conn: RESET	(SYNs: 2)  (FINs: 1)
+	first packet:  Mon Aug 14 01:15:25.766019 2017
+	last packet:   Mon Aug 14 01:29:26.768984 2017
+	elapsed time:  0:14:01.002965
+	total packets: 6327
+	filename:      tt28.out
+   a->b:			      b->a:
+     total packets:          3244           total packets:          3083      
+     resets sent:               0           resets sent:               1      
+     ack pkts sent:          3243           ack pkts sent:          3082      
+     pure acks sent:            1           pure acks sent:         3080      
+     sack pkts sent:            0           sack pkts sent:            0      
+     dsack pkts sent:           0           dsack pkts sent:           0      
+     max sack blks/ack:         0           max sack blks/ack:         0      
+     unique bytes sent:   2481873           unique bytes sent:         0      
+     actual data pkts:       3242           actual data pkts:          0      
+     actual data bytes:   4692969           actual data bytes:         0      
+     rexmt data pkts:        1527           rexmt data pkts:           0      
+     rexmt data bytes:    2211096           rexmt data bytes:          0      
+     zwnd probe pkts:           0           zwnd probe pkts:           0      
+     zwnd probe bytes:          0           zwnd probe bytes:          0      
+     outoforder pkts:         548           outoforder pkts:           0      
+     pushed data pkts:          0           pushed data pkts:          0      
+     SYN/FIN pkts sent:       1/0           SYN/FIN pkts sent:       1/1      
+     req 1323 ws/ts:          Y/Y           req 1323 ws/ts:          Y/Y      
+     adv wind scale:            0           adv wind scale:            7      
+     urgent data pkts:          0 pkts      urgent data pkts:          0 pkts 
+     urgent data bytes:         0 bytes     urgent data bytes:         0 bytes
+     mss requested:          1460 bytes     mss requested:          1460 bytes
+     max segm size:          1448 bytes     max segm size:             0 bytes
+     min segm size:             1 bytes     min segm size:             0 bytes
+     avg segm size:          1447 bytes     avg segm size:             0 bytes
+     max win adv:           65535 bytes     max win adv:         3006080 bytes
+     min win adv:           65535 bytes     min win adv:           31872 bytes
+     zero win adv:              0 times     zero win adv:              0 times
+     avg win adv:           65535 bytes     avg win adv:         1631146 bytes
+     max owin:          18446744073709548721 bytes     max owin:                  1 bytes
+     min non-zero owin:      1449 bytes     min non-zero owin:         1 bytes
+     avg owin:               3389 bytes     avg owin:                  1 bytes
+     wavg owin:         3756322915702974 bytes     wavg owin:                 0 bytes
+     initial window:         1448 bytes     initial window:            0 bytes
+     initial window:            1 pkts      initial window:            0 pkts 
+     ttl stream length:        NA           ttl stream length:         1 bytes
+     missed data:              NA           missed data:               1 bytes
+     truncated data:      4582774 bytes     truncated data:            0 bytes
+     truncated packets:      3241 pkts      truncated packets:         0 pkts 
+     data xmit time:      840.410 secs      data xmit time:        0.000 secs 
+     idletime max:       125628.9 ms        idletime max:       124128.9 ms   
+     throughput:             2951 Bps       throughput:                0 Bps  
+
+     RTT samples:             377           RTT samples:               2      
+     RTT min:                 4.3 ms        RTT min:               500.5 ms   
+     RTT max:               183.3 ms        RTT max:              1438.5 ms   
+     RTT avg:                36.3 ms        RTT avg:               969.4 ms   
+     RTT stdev:              37.3 ms        RTT stdev:               0.0 ms   
+
+     RTT from 3WHS:          49.8 ms        RTT from 3WHS:         500.5 ms   
+
+     RTT full_sz smpls:         1           RTT full_sz smpls:         2      
+     RTT full_sz min:        49.8 ms        RTT full_sz min:       500.5 ms   
+     RTT full_sz max:        49.8 ms        RTT full_sz max:      1438.5 ms   
+     RTT full_sz avg:        49.8 ms        RTT full_sz avg:       969.4 ms   
+     RTT full_sz stdev:       0.0 ms        RTT full_sz stdev:       0.0 ms   
+
+     post-loss acks:          454           post-loss acks:            0      
+	  For the following 5 RTT statistics, only ACKs for
+	  multiply-transmitted segments (ambiguous ACKs) were
+	  considered.  Times are taken from the last instance
+	  of a segment.
+     ambiguous acks:          151           ambiguous acks:            0      
+     RTT min (last):          3.6 ms        RTT min (last):          0.0 ms   
+     RTT max (last):        216.1 ms        RTT max (last):          0.0 ms   
+     RTT avg (last):         39.6 ms        RTT avg (last):          0.0 ms   
+     RTT sdv (last):         38.2 ms        RTT sdv (last):          0.0 ms   
+     segs cum acked:          729           segs cum acked:            0      
+     duplicate acks:         1683           duplicate acks:            1      
+     triple dupacks:          257           triple dupacks:            0      
+     max # retrans:             3           max # retrans:             0      
+     min retr time:           0.0 ms        min retr time:           0.0 ms   
+     max retr time:       43716.7 ms        max retr time:           0.0 ms   
+     avg retr time:        1099.1 ms        avg retr time:           0.0 ms   
+     sdv retr time:        2410.3 ms        sdv retr time:           0.0 ms   
