@@ -34,11 +34,14 @@ main(int argc, char *argv[])
 	readConfig(handle);
 
 	rt = pcap_set_snaplen(handle, 96);
-	if(rt != 0) close_on_error("There was a problem with setting pcap_set_snaplen");
+	if (rt != 0)
+		close_on_error("There was a problem with setting pcap_set_snaplen");
 	rt = pcap_activate(handle);
-	if(rt != 0) close_on_error("error occured activating device");
+	if (rt != 0)
+		close_on_error("error occured activating device");
 	rt = compileFilter(handle);
-	if(rt != 0) close_on_error(pcap_geterr(handle));
+	if (rt != 0)
+		close_on_error(pcap_geterr(handle));
 
 	printf("Link layer header type: %s\n\n", pcap_datalink_val_to_name(pcap_datalink(handle)));
 	
