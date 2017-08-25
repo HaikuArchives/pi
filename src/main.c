@@ -10,9 +10,11 @@
 #define close_on_error(msg) \
 	do { fprintf(stderr, "%s\n", msg); goto close; } while(0)
 
-int main(int argc, char *argv[]) {
 
-	if(argc < 3) {
+int
+main(int argc, char *argv[])
+{
+	if (argc < 3) {
 		fprintf(stderr, "usuage: %s <interface_name> <test number>\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -24,7 +26,7 @@ int main(int argc, char *argv[]) {
 	test = strtol(argv[2], NULL, 10);
 
 	pcap_t* handle = pcap_create(interface, NULL);
-	if(handle == NULL) { 
+	if (handle == NULL) { 
 		fprintf(stderr, "Error in pcap_create. Exiting.\n"); 
 		exit(EXIT_FAILURE); 
 	}
@@ -40,7 +42,7 @@ int main(int argc, char *argv[]) {
 
 	printf("Link layer header type: %s\n\n", pcap_datalink_val_to_name(pcap_datalink(handle)));
 	
-	switch(test) {
+	switch (test) {
 		case TEST_SAMPLE: 			rt = test_sample(handle);
 						  			break;
 		case TEST_FASTRETRANSMIT: 	rt = test_fastretransmit(handle);
@@ -60,7 +62,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	
-	if(rt < 0) 
+	if (rt < 0) 
 		close_on_error(pcap_geterr(handle));
 
 	printStats(handle);

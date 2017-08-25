@@ -9,7 +9,9 @@
 uint32_t s_seq, s_ack;
 uint16_t s_wnd;
 
-static uint16_t ip_checksum(const void *buf, size_t len)
+
+static uint16_t
+ip_checksum(const void *buf, size_t len)
 {
     unsigned long sum = 0;
     const uint16_t *ptr;
@@ -20,16 +22,18 @@ static uint16_t ip_checksum(const void *buf, size_t len)
         len -= 2;
     }
 
-    if(len & 1)
+    if (len & 1)
         sum += *(uint8_t*)(buf);
 
-    while(sum > 0xffff)
+    while (sum > 0xffff)
         sum -= 0xffff;
 
     return (uint16_t)~sum;
 }
 
-static uint16_t tcp_checksum(const void *buff, size_t len, in_addr_t src_addr, in_addr_t dest_addr)
+
+static uint16_t
+tcp_checksum(const void *buff, size_t len, in_addr_t src_addr, in_addr_t dest_addr)
 {
         const uint16_t *buf=buff;
 
@@ -59,15 +63,20 @@ static uint16_t tcp_checksum(const void *buff, size_t len, in_addr_t src_addr, i
         return (uint16_t)(~sum);
 }
 
-void set_en10mb(void* _header) {
 
+void 
+set_en10mb(void* _header)
+{
 	struct en10mb_header* header = (struct en10mb_header*)_header;
 	memcpy(header->dhost, DEST_MAC, ETHER_ADDR_LEN);
 	memcpy(header->shost, SOURCE_MAC, ETHER_ADDR_LEN);
 	header->type = htons(0x0800);
 }
 
-void set_ipv4_tcp(void* _header, uint16_t total_length) {
+
+void
+set_ipv4_tcp(void* _header, uint16_t total_length)
+{
 
 	struct ipv4_header* header = (struct ipv4_header*)_header;
 	header->version = 0x04;
@@ -85,7 +94,10 @@ void set_ipv4_tcp(void* _header, uint16_t total_length) {
 	header->checksum = ip_checksum(header, header->ihl*4);
 }
 
-void set_tcp(void* _header, uint8_t flags, void* options, uint8_t oplen, void* payload, uint16_t paylen) {
+
+void
+set_tcp(void* _header, uint8_t flags, void* options, uint8_t oplen, void* payload, uint16_t paylen)
+{
 
 	struct tcp_header* header = (struct tcp_header*)(_header);
 	header->source_port = htons(SOURCE_PORT);

@@ -1,8 +1,8 @@
-#include <pcap.h>
-#include <fcntl.h>
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <fcntl.h>
+#include <pcap.h>
 
 #include <pi_utilities.h>
 
@@ -15,21 +15,26 @@ uint8_t SOURCE_MAC[6], DEST_MAC[6];
 struct in_addr SOURCE_IP, DEST_IP;
 uint16_t SOURCE_PORT, DEST_PORT;
 
-void readConfig(pcap_t* handle) {
+
+void
+readConfig(pcap_t* handle)
+{
 	
 	int config = open("run.config", O_RDONLY);
-	if(config < 0) err_exit("open");
+	if (config < 0)
+		err_exit("open");
 
 	char buff[BUFSIZ], source_ip[16], dest_ip[16];
 	int rt = read(config, buff, BUFSIZ);
-	if(rt < 0) err_exit("read");
+	if (rt < 0)
+		err_exit("read");
 
 	int i;
 	char* buf = buff;
 	buf = buf - 1;
-	for(i=0;i<6;++i)
+	for (i = 0;i < 6; ++i)
 		SOURCE_MAC[i] = strtol(buf + 1, &buf, 16);
-	for(i=0;i<6;++i)
+	for(i = 0; i < 6; ++i)
 		DEST_MAC[i] = strtol(buf + 1, &buf, 16);
 
 	char* end = strchr(buf + 1, '\n');
@@ -46,30 +51,36 @@ void readConfig(pcap_t* handle) {
 	close(config);
 
     rt = inet_aton(source_ip, &SOURCE_IP);
-    if(rt < 0)
+    if (rt < 0)
         msg_exit("invalid source ipv4 addresses");
     rt = inet_aton(dest_ip, &DEST_IP);
-    if(rt < 0)
+    if (rt < 0)
         msg_exit("invalid destination ipv4 addresses");
 }
 
-int compileFilter(pcap_t* handle) {
+
+int
+compileFilter(pcap_t* handle)
+{
 	
 	char FILTER_EXP[20];
 	snprintf(FILTER_EXP, 20, "src port %d", DEST_PORT);
 
 	struct bpf_program program;
 	int rt = pcap_compile(handle, &program, FILTER_EXP, 1, PCAP_NETMASK_UNKNOWN);
-	if(rt == -1) 
+	if (rt == -1) 
 		return -1;
 	rt = pcap_setfilter(handle, &program);
-	if(rt == -1) 
+	if (rt == -1) 
 		return -1;
 	pcap_freecode(&program);
 	return 0;
 }
 
-void printStats(pcap_t* handle) {
+
+void
+printStats(pcap_t* handle)
+{
     struct pcap_stat ps;
     pcap_stats(handle, &ps);
     
